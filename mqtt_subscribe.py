@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # Callback function will be triggered
     def on_message(client, userdata, msg):
         print(f"Get message from publisher {json.loads(msg.payload)}")
-        values.append(json.loads(msg.payload))s
+        values.append(json.loads(msg.payload))
 
 
     print(len(values))

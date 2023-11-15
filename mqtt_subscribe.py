@@ -21,7 +21,10 @@ if __name__ == '__main__':
     # Callback function will be triggered
     def on_message(client, userdata, msg):
         print(f"Get message from publisher {json.loads(msg.payload)}")
+        values = json.loads(msg.payload)
 
+
+    print(len(values))
     # Subscribe MQTT topic
     client.subscribe(topic)
     client.on_message = on_message

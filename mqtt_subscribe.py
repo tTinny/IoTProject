@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # Subscribe MQTT topic
     client.subscribe(topic)
     client.on_message = on_message
-    print(client.on_message)
+    print(json.loads(client.on_message))
 
     # Start a thread to monitor message from publisher
     client.loop_forever()

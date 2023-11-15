@@ -6,7 +6,7 @@ import json
 import random
 
 starttime = "20230701"
-endtime = "20230802"
+endtime = "20230805"
 values = []
 dictionary = {}
 
@@ -25,12 +25,11 @@ data = data.json()
 
 data_input = data.get('sensors')[0]['data'].get('PM2.5')
 
-for i in range(0,len(data_input)):
+for i in range(20):
 	dictionary['Timestamp'] = data_input[i].get('Timestamp')
 	dictionary['Value'] = data_input[i].get('Value')
+	dictionary = {}
 	values.append(dictionary)
-
-#print(values)
 
 client = mqtt_client.Client()
 def on_connect(client, userdata, flags, rc):
@@ -48,9 +47,10 @@ client.connect(mqtt_ip, mqtt_port)
 #msg = json.dumps(msg)
 
 for i in range(0,len(values)):
+	#print(i,values[i])
 	msg = f"Timestamp:{values[i].get('Timestamp')}, Value:{values[i].get('Value')}"
 	msg = json.dumps(msg)
-	print(msg)
+	#print(msg)
 	client.publish(topic, msg)
 
 

@@ -26,13 +26,11 @@ if __name__ == '__main__':
         # print(f"Get message from publisher {json.loads(msg.payload)}")
         values = json.loads(msg.payload)
         print(values)
-        return values
 
 
     # Subscribe MQTT topic
     client.subscribe(topic)
     client.on_message = on_message
-    print(json.loads(client.on_message))
 
     # Start a thread to monitor message from publisher
     client.loop_forever()

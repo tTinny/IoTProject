@@ -1,7 +1,7 @@
 # python code for data injection
 
 import requests
-import paho.mqtt.client as mqtt
+from paho.mqtt import client as mqtt_client
 import json
 import random
 
@@ -10,13 +10,11 @@ endtime = "20230802"
 values = []
 dictionary = {}
 
-broker = 'emqx@172.17.0.2'
-port = 1883
-topic = 'python/mqtt'
-client_id = f'python-mqtt-123'
-username = 'admin'
-password = 'admin1234'
-
+clientID = 'test'
+mqtt_ip = "localhost"
+mqtt_port = 1883
+topic = "python/mqtt"
+#msg = f'python-mqtt-123'
 
 
 url = f"https://newcastle.urbanobservatory.ac.uk/api/v1.1/sensors/PER_AIRMON_MONITOR1135100/data/json/?starttime={starttime}&endtime={endtime}"
@@ -32,11 +30,28 @@ for i in range(0,len(data_input)):
 	dictionary['Value'] = data_input[i].get('Value')
 	values.append(dictionary)
 
+#print(values)
 
-client = mqtt.Client(client_id)
-client.username_pw_set(username, password)
-client.connect(broker, port)
-publish(client)
-print(client)
+client = mqtt_client.Client()
+def on_connect(client, userdata, flags, rc):
+	if rc == 0:
+		print("Connected to MQTT OK!")
+	else:
+		print("Failed to connect, return code %d\n", rc)
+	
+# Connect to MQTT service
+client.on_connect = on_connect
+client.connect(mqtt_ip, mqtt_port)
+
+# Publish message to MQTT
+# Note: MQTT payload must be a string, bytearray, int, float or None
+#msg = json.dumps(msg)
+
+for i in range(0,len(values)):
+	msg = f"Timestamp:{values[i].get('Timestamp')}, Value:{values[i].get('Value')}"
+	msg = json.dumps(msg)
+	print(msg)
+	client.publish(topic, msg)
+
 
 print('client connected')

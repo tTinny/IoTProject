@@ -1,5 +1,6 @@
 import json
 from paho.mqtt import client as mqtt_client
+import pika
 
 if __name__ == '__main__':
     clientID = 'test'
@@ -7,6 +8,18 @@ if __name__ == '__main__':
     mqtt_port = 1883
     topic = "python/mqtt"
     values  = []
+
+    rabbitmq_ip = "localhost"
+    rabbitmq_port = 5672
+    # Queue name
+    rabbitmq_queque = "CSC8112"
+
+    # Connect to RabbitMQ service
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_ip, port=rabbitmq_port))
+    channel = connection.channel()
+
+    # Declare a queue
+    channel.queue_declare(queue=rabbitmq_queque)
 
     client = mqtt_client.Client()
 
@@ -26,6 +39,12 @@ if __name__ == '__main__':
         # print(f"Get message from publisher {json.loads(msg.payload)}")
         values = json.loads(msg.payload)
         print(values)
+        channel.basic_publish(exchange='',
+                          routing_key=rabbitmq_queque,
+                          body=json.dumps(values))
+
+   
+    connection.close()
 
 
     # Subscribe MQTT topic

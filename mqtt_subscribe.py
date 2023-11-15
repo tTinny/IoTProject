@@ -6,6 +6,7 @@ if __name__ == '__main__':
     mqtt_ip = "localhost"
     mqtt_port = 1883
     topic = "python/mqtt"
+    values  = []
 
     client = mqtt_client.Client()
 
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     # Callback function will be triggered
     def on_message(client, userdata, msg):
         print(f"Get message from publisher {json.loads(msg.payload)}")
-        values = json.loads(msg.payload)
+        values.append(json.loads(msg.payload))s
 
 
     print(len(values))

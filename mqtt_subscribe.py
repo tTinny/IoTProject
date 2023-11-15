@@ -7,6 +7,8 @@ if __name__ == '__main__':
     mqtt_port = 1883
     topic = "python/mqtt"
 
+    client = mqtt_client.Client()
+
     # Callback function for MQTT connection
     def on_connect(client, userdata, flags, rc):
         if rc == 0:

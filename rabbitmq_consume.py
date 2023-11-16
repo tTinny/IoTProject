@@ -8,8 +8,8 @@ def fetch_data():
     rabbitmq_port = 5672
     # Queue name
     rabbitmq_queque = "CSC8112"
-    timestamp = []
-    value = []
+    Timestamp = []
+    Value = []
     dictionary = {}
 
     def callback(ch, method, properties, body):
@@ -19,8 +19,8 @@ def fetch_data():
             date = datetime.fromtimestamp(timestamp)
             value = f"{msg[:10]}{date}{msg[23:]}"
             print(f"Got message from producer msg: {value}")
-            timestamp.append(date)
-            value.append({msg[28:]})
+            Timestamp.append(date)
+            Value.append({msg[28:]})
 
 
     # Connect to RabbitMQ service with timeout 1min

@@ -23,13 +23,16 @@ def fetch_data():
     client.on_connect = on_connect
     client.connect(mqtt_ip, mqtt_port)
 
-    channel,rabbitmq_queque = rabbitmq_connection()
+    
 
     # Callback function will be triggered
     def on_message(client, userdata, msg):
         # print(f"Get message from publisher {json.loads(msg.payload)}")
         values = json.loads(msg.payload)
+        data = vlaues[:30]
+        print(data)
         print(values,flush=True)
+        channel,rabbitmq_queque = rabbitmq_connection()
         channel.basic_publish(exchange='',
                           routing_key=rabbitmq_queque,
                           body=json.dumps(values))

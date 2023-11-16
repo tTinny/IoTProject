@@ -8,6 +8,9 @@ def fetch_data():
     rabbitmq_port = 5672
     # Queue name
     rabbitmq_queque = "CSC8112"
+    timestamp = []
+    value = []
+    dictionary = {}
 
     def callback(ch, method, properties, body):
         msg = json.loads(body)
@@ -16,6 +19,8 @@ def fetch_data():
             date = datetime.fromtimestamp(timestamp)
             value = f"{msg[:10]}{date}{msg[23:]}"
             print(f"Got message from producer msg: {value}")
+            timestamp.append(date)
+            value.append({msg[28:]})
 
 
     # Connect to RabbitMQ service with timeout 1min
@@ -30,6 +35,10 @@ def fetch_data():
                           on_message_callback=callback)
 
     channel.start_consuming()
+    dictionary['timestamp'] = timestamp
+    dictionary['value'] = value
+
+    print(dictionary)
 
 if __name__ == '__main__':
     fetch_data()

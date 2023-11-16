@@ -1,8 +1,8 @@
 FROM python:3.8
 
-USER root
+RUN apt-get update
 
-ADD ./mqtt_subscribe.py /home/src
+ADD . /home/src
 
 WORKDIR /home/src
 

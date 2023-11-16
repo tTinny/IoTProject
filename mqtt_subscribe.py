@@ -4,12 +4,12 @@ import pika
 
 if __name__ == '__main__':
     clientID = 'test'
-    mqtt_ip = "localhost"
+    mqtt_ip = "l192.168.0.102"
     mqtt_port = 1883
     topic = "python/mqtt"
     values  = []
 
-    rabbitmq_ip = "localhost"
+    rabbitmq_ip = "192.168.0.100"
     rabbitmq_port = 5672
     # Queue name
     rabbitmq_queque = "CSC8112"
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # Callback function for MQTT connection
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to MQTT OK!")
+            print("Connected to MQTT OK!", flush=True)
         else:
             print("Failed to connect, return code %d\n", rc)
 
@@ -38,13 +38,10 @@ if __name__ == '__main__':
     def on_message(client, userdata, msg):
         # print(f"Get message from publisher {json.loads(msg.payload)}")
         values = json.loads(msg.payload)
-        print(values)
+        print(values,flush=True)
         channel.basic_publish(exchange='',
                           routing_key=rabbitmq_queque,
                           body=json.dumps(values))
-
-   
-    connection.close()
 
 
     # Subscribe MQTT topic

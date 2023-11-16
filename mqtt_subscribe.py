@@ -5,7 +5,7 @@ import pika
 
 def fetch_data():
     clientID = 'test'
-    mqtt_ip = "l192.168.0.102"
+    mqtt_ip = "192.168.0.102"
     mqtt_port = 1883
     topic = "python/mqtt"
     values  = []

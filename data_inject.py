@@ -4,30 +4,38 @@ import requests
 from paho.mqtt import client as mqtt_client
 import json
 import random
+from datetime import date
 
 
 def fetch_data():
-	starttime = "20230701"
-	endtime = "20230805"
+
+	starttime = "2023-09-01"
+	endtime = "2023-09-02"
 	values = []
 	dictionary = {}
 
-	url = f"https://newcastle.urbanobservatory.ac.uk/api/v1.1/sensors/PER_AIRMON_MONITOR1135100/data/json/?starttime={starttime}&endtime={endtime}"
+	while True:
 
-	data = requests.get(url)
+		url = f"https://newcastle.urbanobservatory.ac.uk/api/v1.1/sensors/PER_AIRMON_MONITOR1135100/data/json/?starttime={starttime.replace('-','')}&endtime={endtime.replace('-','')}"
 
-	data = data.json()
+		data = requests.get(url)
 
-	data_input = data.get('sensors')[0]['data'].get('PM2.5')
+		data = data.json()
 
-	for i in range(20):
-		dictionary['Timestamp'] = data_input[i].get('Timestamp')
-		dictionary['Value'] = data_input[i].get('Value')
-		dictionary = {}
-		values.append(dictionary)
+		data_input = data.get('sensors')[0]['data'].get('PM2.5')
 
-	publish_msg(values)
+		for i in range(20):
+			dictionary['Timestamp'] = data_input[i].get('Timestamp')
+			dictionary['Value'] = data_input[i].get('Value')
+			dictionary = {}
+			values.append(dictionary)
 
+		publish_msg(values)
+
+		starttime = endtime
+		date = endtime + timedelta(days=1) 
+		date = str(date)
+		endtime = date[:10]
 
 def publish_msg(values):
 	clientID = 'test'

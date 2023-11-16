@@ -1,7 +1,8 @@
 import json
 import pika
+from datetime import datetime
 
-if __name__ == '__main__':
+def fetch_data():
 
     rabbitmq_ip = "localhost"
     rabbitmq_port = 5672
@@ -9,7 +10,11 @@ if __name__ == '__main__':
     rabbitmq_queque = "CSC8112"
 
     def callback(ch, method, properties, body):
-        print(f"Got message from producer msg: {json.loads(body)}")
+        msg = json.loads(body)
+        timestamp = msg[10:20]
+        date = datetime.fromtimestamp(timestamp)
+        value = f"{msg[:10]}{date}{msg[23:]}"
+        print(f"Got message from producer msg: {value}")
 
     # Connect to RabbitMQ service with timeout 1min
     connection = pika.BlockingConnection(
@@ -23,3 +28,6 @@ if __name__ == '__main__':
                           on_message_callback=callback)
 
     channel.start_consuming()
+
+if __name__ == '__main__':
+    fetch_data()

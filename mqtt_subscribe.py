@@ -2,24 +2,13 @@ import json
 from paho.mqtt import client as mqtt_client
 import pika
 
-if __name__ == '__main__':
+
+def fetch_data():
     clientID = 'test'
     mqtt_ip = "l192.168.0.102"
     mqtt_port = 1883
     topic = "python/mqtt"
     values  = []
-
-    rabbitmq_ip = "192.168.0.100"
-    rabbitmq_port = 5672
-    # Queue name
-    rabbitmq_queque = "CSC8112"
-
-    # Connect to RabbitMQ service
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_ip, port=rabbitmq_port))
-    channel = connection.channel()
-
-    # Declare a queue
-    channel.queue_declare(queue=rabbitmq_queque)
 
     client = mqtt_client.Client()
 
@@ -33,6 +22,8 @@ if __name__ == '__main__':
     # Connect to MQTT service
     client.on_connect = on_connect
     client.connect(mqtt_ip, mqtt_port)
+
+    channel = rabbitmq_connection()
 
     # Callback function will be triggered
     def on_message(client, userdata, msg):
@@ -50,3 +41,22 @@ if __name__ == '__main__':
 
     # Start a thread to monitor message from publisher
     client.loop_forever()
+
+def rabbitmq_connection():
+
+    rabbitmq_ip = "192.168.0.100"
+    rabbitmq_port = 5672
+    # Queue name
+    rabbitmq_queque = "CSC8112"
+
+    # Connect to RabbitMQ service
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_ip, port=rabbitmq_port))
+    channel = connection.channel()
+
+    # Declare a queue
+    channel.queue_declare(queue=rabbitmq_queque)
+
+    return channel
+
+if __name__ == '__main__':
+    fetch_data()

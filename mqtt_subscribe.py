@@ -23,7 +23,7 @@ def fetch_data():
     client.on_connect = on_connect
     client.connect(mqtt_ip, mqtt_port)
 
-    channel = rabbitmq_connection()
+    channel,rabbitmq_queque = rabbitmq_connection()
 
     # Callback function will be triggered
     def on_message(client, userdata, msg):
@@ -56,7 +56,7 @@ def rabbitmq_connection():
     # Declare a queue
     channel.queue_declare(queue=rabbitmq_queque)
 
-    return channel
+    return channel,rabbitmq_queque 
 
 if __name__ == '__main__':
     fetch_data()
